@@ -1,0 +1,44 @@
+﻿<Page x:Class="CompanyDirectory.Views.Pages.SubPages.SprCompanyPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:vm="clr-namespace:CompanyDirectory.ViewModels"
+      xmlns:local="clr-namespace:CompanyDirectory.Views.Pages.SubPages"
+      mc:Ignorable="d"
+      DataContext="{Binding SprCompanyModel, Source={StaticResource Locator}}"
+      Title="SprCompanyPage">
+    <!--<Page.DataContext>
+        <vm:SprCompanyViewModel/>
+    </Page.DataContext>-->
+    
+    <DockPanel Background="White">
+        <Menu DockPanel.Dock="Top" Background="#FF0F4E7a" VerticalAlignment="Top">
+            <MenuItem Header="Создать"  Background="White" Height="20" Command="{Binding ButtonAddCommand}"/>
+            <MenuItem Header="Изменить" Background="White" Command="{Binding ButtonEditCommand}"/>
+            <MenuItem Header="Удалить" Background="White" Command="{Binding ButtonDeleteCommand}"/>
+        </Menu>
+        <Grid DockPanel.Dock="Left">
+            <DataGrid ItemsSource="{Binding Companies}" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Название" Binding="{Binding Caption}"/>
+                    <DataGridTextColumn Header="Дата создания" Binding="{Binding DateCreate}"/>
+                    <DataGridTextColumn Header="Юридический адрес" Binding="{Binding LegalAddress}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid VerticalAlignment="Bottom">
+            <Label Content="Список подразделений" HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Top" VerticalContentAlignment="Center"></Label>
+            <ListView DockPanel.Dock="Top" VerticalAlignment="Top" Height="53" Margin="0,31,0,0" ItemsSource="{Binding Divisions}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <TextBlock Text="{Binding Caption}" FontWeight="Bold" />
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+    </DockPanel>
+</Page>

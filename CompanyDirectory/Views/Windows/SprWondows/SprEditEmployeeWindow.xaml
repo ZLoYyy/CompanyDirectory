@@ -1,0 +1,75 @@
+﻿<Window x:Class="CompanyDirectory.Views.Windows.SprWondows.SprEditEmployeeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CompanyDirectory.Views.Windows.SprWondows"
+        xmlns:vm="clr-namespace:CompanyDirectory.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:SprEditEmployeeViewModel, IsDesignTimeCreatable=True}"
+        Title="SprEditEmployeeWindow" Height="320" Width="585">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel Margin="3">
+        <UniformGrid Rows="1" DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Right">
+            <Button Content="ОК" Margin="3" Padding="20,3" FontWeight="Bold" IsDefault="True"
+                    Command="{StaticResource DialogResultCommand}"
+                    CommandParameter="True"/>
+            <Button Content="Отмена" Margin="3" Padding="20,3" IsCancel="True"
+                    Command="{StaticResource DialogResultCommand}"
+                    CommandParameter="False"/>
+        </UniformGrid>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Имя:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding CurrentEmployee.FirstName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Фамилия:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBox Grid.Column="0" Grid.Row="3" Text="{Binding CurrentEmployee.LastName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Отчество:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBox Grid.Column="0" Grid.Row="5" Text="{Binding CurrentEmployee.SecondName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="6" Text="Дата рождения:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <DatePicker Grid.Column="0" Grid.Row="7"  SelectedDate="{Binding CurrentEmployee.DateofBorn}"/>
+            <TextBlock Grid.Column="0" Grid.Row="8" Text="Дата трудоустройства:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <DatePicker Grid.Column="0" Grid.Row="9" SelectedDate="{Binding CurrentEmployee.DateWorkBegin}"/>
+            <TextBlock Grid.Column="0" Grid.Row="10" Text="Зарплата:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBox Grid.Column="0" Grid.Row="11" Text="{Binding CurrentEmployee.Salary}"/>
+
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="Компания:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Column="2" Grid.Row="1"  ItemsSource="{Binding Companies}" DisplayMemberPath="Caption"
+                      SelectedValue="{Binding SelectedCompany}" />
+
+            <TextBlock Grid.Column="2" Grid.Row="2" Text="Отдел:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Column="2" Grid.Row="3"  ItemsSource="{Binding Divisions}" DisplayMemberPath="Caption"
+                      SelectedValue="{Binding SelectedDivision}" />
+
+            <TextBlock Grid.Column="2" Grid.Row="4" Text="Должность:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Column="2" Grid.Row="5" ItemsSource="{Binding Posts}" DisplayMemberPath="Caption"
+                      SelectedValue="{Binding SelectedPost}" />
+
+            <CheckBox Grid.Column="2" Grid.Row="6" Content="Является директором своего отдела" IsChecked="{Binding CurrentEmployee.IsDirector}" Width="0"/>
+        </Grid>
+    </DockPanel>
+</Window>
