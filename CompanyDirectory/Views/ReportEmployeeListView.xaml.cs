@@ -13,11 +13,11 @@ using System.Windows.Shapes;
 namespace CompanyDirectory.Views.Windows.ReportWindows
 {
     /// <summary>
-    /// Interaction logic for ReportView.xaml
+    /// Interaction logic for ReportEmployeeListView.xaml
     /// </summary>
-    public partial class ReportView : Window
+    public partial class ReportEmployeeListView : Window
     {
-        public ReportView()
+        public ReportEmployeeListView()
         {
             InitializeComponent();
         }

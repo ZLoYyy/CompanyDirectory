@@ -91,7 +91,6 @@ namespace CompanyDirectory.ViewModels
 
         private void OnChangeEditCommandExecuted(object p)
         {
-            //_sprEditDivision.ShowDialog();
             var divisionEditorModel = new SprEditDivisionViewModel(SelectedDivision, _postRep);
 
             var divisionEditorWindow = new SprEditDivisionWindow
@@ -102,7 +101,6 @@ namespace CompanyDirectory.ViewModels
             if (divisionEditorWindow.ShowDialog() != true)
                 return;
 
-            //Divisions.Add(_divisionsRep.Add(divisionEditorModel.CurrentDivision));
             _divisionsRep.Update(divisionEditorModel.CurrentDivision);
             //SelectedDivision = divisionEditorModel.CurrentDivision;
         }

@@ -20,6 +20,16 @@ namespace CompanyDirectory.ViewModels
 {
     internal class SprEditDivisionViewModel : BaseViewModel
     {
+        public string Title
+        {
+            get
+            {
+                if (CurrentDivision != null && CurrentDivision.Id > 0)
+                    return "Редактирование подразделения";
+                else
+                    return "Добавление подразделения";
+            }
+        }
         private Division _division;
         private IRepository<Post> _repositoryPost;
         public Division CurrentDivision { get => _division; set => Set(ref _division, value); }
@@ -92,7 +102,7 @@ namespace CompanyDirectory.ViewModels
 
         private void OnChangeAddCommandExecuted(object p)
         {
-            var postSelectModel = new SelectedItemViewModel(MainPostList.ToList<NameEntity>());
+            var postSelectModel = new SelectedItemViewModel(MainPostList.ToList<NameEntity>(), "Выбор должности");
 
             var postSelectWindow = new SelectedItemWindow
             {

@@ -10,6 +10,16 @@ namespace CompanyDirectory.ViewModels
 {
     internal class SprEditPostViewModel : BaseViewModel
     {
+        public string Title
+        {
+            get
+            {
+                if (CurrentPost != null && CurrentPost.Id > 0)
+                    return "Редактирование должности";
+                else
+                    return "Добавление должности";
+            }
+        }
         private Post _currentPost;
 
         public Post CurrentPost { get => _currentPost; set => Set(ref _currentPost, value); }

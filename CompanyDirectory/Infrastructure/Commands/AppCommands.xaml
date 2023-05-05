@@ -3,4 +3,8 @@
                     xmlns:l="clr-namespace:CompanyDirectory.Infrastructure.Commands">
 
     <l:DialogResultCommand x:Key="DialogResultCommand"/>
+    <l:DialogResultCompanyCommand x:Key="DialogResultCompanyCommand"/>
+    <l:DialogResultDivisionCommand x:Key="DialogResultDivisionCommand"/>
+    <l:DialogResultEmployeeCommand x:Key="DialogResultEmployeeCommand"/>
+    <l:DialogResultPostCommand x:Key="DialogResultPostCommand"/>
 </ResourceDictionary>

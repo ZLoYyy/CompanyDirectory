@@ -84,7 +84,7 @@ namespace CompanyDirectory.ViewModels
 
         private void OnChangeReportPageCommandExecuted(object p)
         {
-            CurrenViewtModel = new ReportManageViewModel(_reportRep, _companyRep, _employeesRep, _divisionRep, _postsRep);
+            CurrenViewtModel = new ReportManageViewModel(_reportRep, _companyRep, _divisionRep, _employeesRep);
         }
         #endregion
 
@@ -107,7 +107,7 @@ namespace CompanyDirectory.ViewModels
         /// <summary>
         /// Заголовок
         /// </summary>
-        public string Title { get => ""; }
+        public string Title { get => "Реестр компаний"; }
         /// <summary>
         /// Текущая страница
         /// </summary>

@@ -17,6 +17,17 @@ namespace CompanyDirectory.ViewModels
 {
     internal class SprEditEmployeeViewModel : BaseViewModel
     {
+        public string Title
+        {
+            get
+            {
+                if (CurrentEmployee != null && CurrentEmployee.Id > 0)
+                    return "Редактирование сотрудника";
+                else
+                    return "Добавление сотрудника";
+            }
+        }
+
         private IRepository<Company> _repositoryCompany;
         private IRepository<Division> _repositoryDivision;
         private IRepository<Post> _repositoryPosts;

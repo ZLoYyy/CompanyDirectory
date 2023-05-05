@@ -21,6 +21,16 @@ namespace CompanyDirectory.ViewModels
 {
     internal class SprEditCompanyViewModel : BaseViewModel
     {
+        public string Title
+        {
+            get
+            {
+                if (CurrentCompany != null && CurrentCompany.Id > 0)
+                    return "Редактирование компнии";
+                else
+                    return "Добавление компнии";
+            }
+        }
         private IRepository<Division> _repositoryDivision;
 
 
@@ -123,7 +133,7 @@ namespace CompanyDirectory.ViewModels
 
         private void OnChangeAddCommandExecuted(object p)
         {
-            var divisionEditorModel = new SelectedItemViewModel(Divisions.ToList<NameEntity>());
+            var divisionEditorModel = new SelectedItemViewModel(Divisions.ToList<NameEntity>(), "Выбор подразделения");
 
             var divisionEditorWindow = new SelectedItemWindow
             {
@@ -142,7 +152,7 @@ namespace CompanyDirectory.ViewModels
         private ICommand _buttonDeleteCommand;
         public ICommand ButtonDeleteCommand => _buttonDeleteCommand
             ??= new LambdaCommand<Division>(OnChangeDeleteCommandExecuted, CanChangeDeleteCommandExecute);
-        private bool CanChangeDeleteCommandExecute(Division p) => p != null || SelectedDivision != null;
+        private bool CanChangeDeleteCommandExecute(Division p) => SelectedDivision != null;
 
         private void OnChangeDeleteCommandExecuted(Division p)
         {

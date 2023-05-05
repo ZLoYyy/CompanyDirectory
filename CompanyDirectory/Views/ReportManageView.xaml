@@ -19,12 +19,12 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Button Grid.Column="0" Grid.Row="1" Content="Построить" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="120" Command="{Binding ButtonBuildReport}"/>
-            <ListView Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Reports}" >
+            <Button Grid.Column="0" Grid.Row="1" Content="Просмотр" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Command="{Binding ButtonStartReport}"/>
+            <ListView Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Reports}" SelectedItem="{Binding SelectedReport}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Название" Width="320" DisplayMemberBinding="{Binding Caption}" />
