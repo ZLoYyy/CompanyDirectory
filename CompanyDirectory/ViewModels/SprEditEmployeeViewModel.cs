@@ -48,6 +48,8 @@ namespace CompanyDirectory.ViewModels
                     return;
                 var filterDivisions = MainDivisionsList.Where(D => _selectedCompany.Divisions.Contains(D));
 
+
+                CurrentEmployee.CurrentCompany = _selectedCompany;
                 Divisions = new ObservableCollection<Division>();
                 foreach (Division division in filterDivisions)
                     Divisions.Add(division);
@@ -65,6 +67,7 @@ namespace CompanyDirectory.ViewModels
                 if (_selectedDivision == null || MainPostList == null)
                     return;
 
+                CurrentEmployee.CurrentDivision = _selectedDivision;
                 var filterPosts = MainPostList.Where(P => _selectedDivision.Posts.Contains(P));
 
                 Posts = new ObservableCollection<Post>();
@@ -75,7 +78,14 @@ namespace CompanyDirectory.ViewModels
 
 
         private Post _selectedPost;
-        public Post SelectedPost { get => _selectedPost; set => Set(ref _selectedPost, value); }
+        public Post SelectedPost { get => _selectedPost; set 
+            {
+                if (!Set(ref _selectedPost, value))
+                    return;
+
+                CurrentEmployee.CurrentPost = _selectedPost;
+            } 
+        }
         public SprEditEmployeeViewModel() : this(null, null, null, null) { }
         public SprEditEmployeeViewModel(IRepository<Company> repositoryCompany, IRepository<Division> repositoryDivision, IRepository<Post> repositoryPosts)
             : this(new Employee(), repositoryCompany, repositoryDivision, repositoryPosts)
