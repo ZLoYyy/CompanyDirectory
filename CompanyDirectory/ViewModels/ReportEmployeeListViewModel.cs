@@ -29,22 +29,58 @@ namespace CompanyDirectory.ViewModels
             get => _selectedCompany;
             set
             {
-                Set(ref _selectedCompany, value);
-                if (_selectedCompany == null || MainDivisionsList == null)
-                    return;
-                var filterDivisions = MainDivisionsList.Where(D => _selectedCompany.Divisions.Contains(D));
-
-                Divisions = new ObservableCollection<Division>();
-                foreach (Division division in filterDivisions)
-                    Divisions.Add(division);
+                if (Set(ref _selectedCompany, value))
+                    UpdateData();
             }
         }
 
-        private Division _selectedDivision;
-        public Division SelectedDivision
+        private string _selectedExperience;
+        public string SelectedExperience
         {
-            get => _selectedDivision;
-            set => Set(ref _selectedDivision, value);
+            get => _selectedExperience;
+            set
+            {
+                if (Set(ref _selectedExperience, value))
+                    UpdateData();
+            }
+        }
+
+        private string _selectedFilterType;
+        public string SelectedFilterType
+        {
+            get => _selectedFilterType;
+            set
+            {
+                if (!Set(ref _selectedFilterType, value))
+                    return;
+
+                if (FilterValueViews == null)
+                    FilterValueViews = new ObservableCollection<string>();
+                else
+                    FilterValueViews.Clear();
+                
+                //Определяем фильтр
+                if (_selectedFilterType.Contains("Возраст")) 
+                {
+                    FilterValueViews.AddRange(new string[] { "10-20", "20-30", "30-40", "50-60", "60+"});
+                }   
+                else if (_selectedFilterType.Contains("Год рождения")) 
+                {
+                    for (int i = DateTime.Today.Year; i >= 1900; i--)
+                        FilterValueViews.Add(i.ToString());
+                }
+            }
+        }
+
+        private string _selectedFilterValue;
+        public string SelectedFilterValue
+        {
+            get => _selectedFilterValue;
+            set 
+            {
+                if(Set(ref _selectedFilterValue, value))
+                    UpdateData(); 
+            }
         }
 
         public ReportEmployeeListViewModel()
@@ -59,7 +95,6 @@ namespace CompanyDirectory.ViewModels
             _repositoryDivision = divisions;
             _repositoryEmployee = employees;
         }
-
 
         #region ReportEmployeeList
         private CollectionViewSource _reportEmployeeListViewSource;
@@ -118,19 +153,46 @@ namespace CompanyDirectory.ViewModels
         }
         #endregion
 
-        #region Division List
-        public List<Division> MainDivisionsList { get; set; }
-        private CollectionViewSource _divisionViewSource;
-        private ObservableCollection<Division> _divisions;
-        public ICollectionView DivisionsView => _divisionViewSource?.View;
-        public ObservableCollection<Division> Divisions
+        #region Experience List
+        private CollectionViewSource _experienceViewSource;
+        private ObservableCollection<string> _experienceViews;
+        public ICollectionView ExperienceViewSource => _experienceViewSource?.View;
+        public ObservableCollection<string> ExperienceViews
         {
-            get => _divisions;
+            get => _experienceViews;
             set
             {
-                if (Set(ref _divisions, value))
+                if (Set(ref _experienceViews, value))
                 {
-                    _divisionViewSource = new CollectionViewSource
+                    _experienceViewSource = new CollectionViewSource
+                    {
+                        Source = value,
+                        SortDescriptions =
+                        {
+                            new SortDescription(nameof(value), ListSortDirection.Ascending)
+                        }
+                    };
+
+                    _experienceViewSource.View.Refresh();
+
+                    OnPropertyChanged(nameof(ExperienceViewSource));
+                }
+            }
+        }
+        #endregion
+
+        #region FilterTypesViews List
+        private CollectionViewSource _filterTypesViewSource;
+        private ObservableCollection<string> _filterTypesViews = new ObservableCollection<string>() { "Год рождения", "Возраст" };
+        public ICollectionView FilterTypesView => _filterTypesViewSource?.View;
+        public ObservableCollection<string> FilterTypesViews
+        {
+            get => _filterTypesViews;
+            set
+            {
+                if (Set(ref _filterTypesViews, value))
+                {
+                    _filterTypesViewSource = new CollectionViewSource
                     {
                         Source = value,
                         SortDescriptions =
@@ -139,9 +201,37 @@ namespace CompanyDirectory.ViewModels
                         }
                     };
 
-                    _divisionViewSource.View.Refresh();
+                    _filterTypesViewSource.View.Refresh();
 
-                    OnPropertyChanged(nameof(DivisionsView));
+                    OnPropertyChanged(nameof(FilterTypesView));
+                }
+            }
+        }
+        #endregion
+
+        #region ExperienceValueViews List
+        private CollectionViewSource _filterValueViewSource;
+        private ObservableCollection<string> _filterValueViews;
+        public ICollectionView FilterValueView => _filterValueViewSource?.View;
+        public ObservableCollection<string> FilterValueViews
+        {
+            get => _filterValueViews;
+            set
+            {
+                if (Set(ref _filterValueViews, value))
+                {
+                    _filterValueViewSource = new CollectionViewSource
+                    {
+                        Source = value,
+                        SortDescriptions =
+                        {
+                            new SortDescription(nameof(value), ListSortDirection.Ascending)
+                        }
+                    };
+
+                    _filterValueViewSource.View.Refresh();
+
+                    OnPropertyChanged(nameof(FilterTypesView));
                 }
             }
         }
@@ -176,18 +266,15 @@ namespace CompanyDirectory.ViewModels
                 Companies = new ObservableCollection<Company>();
             MainCompanyList.Clear();
 
+            if (ExperienceViews == null)
+                ExperienceViews = new ObservableCollection<string>();
+            ExperienceViews.AddRange(new string[] { "0-3", "3-6", "6-10", "10-15", "15-20", "20-30", "30+" });
+
             foreach (Company company in await _repositoryCompany.Items.ToArrayAsync())
             {
                 MainCompanyList.Add(company);
                 Companies.Add(company);
             }
-
-            if (MainDivisionsList == null)
-                MainDivisionsList = new List<Division>();
-            MainDivisionsList.Clear();
-
-            foreach (Division division in await _repositoryDivision.Items.ToArrayAsync())
-                MainDivisionsList.Add(division);
 
             if (Employees == null)
                 Employees = new List<Employee>();
@@ -200,19 +287,91 @@ namespace CompanyDirectory.ViewModels
         private void UpdateData()
         {
             ReportEmployeeLists = new ObservableCollection<ReportEmployeeList>();
+            IEnumerable<Employee> subList = null;
+            if (SelectedCompany == null)
+                subList = Employees;
+            else
+                subList = Employees.Where(E => E.CurrentCompany == SelectedCompany);
 
-            List<Employee> subList = (List<Employee>)Employees.Where(E => E.CurrentCompany == SelectedCompany && E.CurrentDivision == SelectedDivision);
+            if (SelectedExperience != null)
+            {
+                if (SelectedExperience.Contains("+"))
+                {
+                    int.TryParse(SelectedExperience.Replace("+", ""), out int experience);
+                    subList = Employees.Where(E => GetAge(E.DateWorkBegin) > experience);
+                }
+                else
+                {
+                    string[] ages = SelectedExperience.Split("-");
+                    if (ages.Length > 1)
+                    {
+                        int.TryParse(ages[0], out int ageBegin);
+                        int.TryParse(ages[1], out int ageEnd);
+                        if (ageEnd > 0)
+                            subList = subList.Where(E => GetAge(E.DateWorkBegin) >= ageBegin && GetAge(E.DateWorkBegin) <= ageEnd);
+                    }
+                }
+            }
 
+            if (SelectedFilterType != null) 
+            {
+                if (SelectedFilterType.Contains("Год рождения") && SelectedFilterValue != null)
+                {
+                    int.TryParse(SelectedFilterValue, out int year);
+                    if (year > 0)
+                        subList = subList.Where(E => E.DateofBorn.Year >= year);
+                }
+                else if (SelectedFilterType.Contains("Возраст") && SelectedFilterValue != null)
+                {
+                    if (SelectedFilterValue.Contains("+"))
+                    {
+                        int.TryParse(SelectedFilterValue.Replace("+", ""), out int age);
+                        subList = subList.Where(E => GetAge(E.DateofBorn) > age);
+                    }
+                    else
+                    {
+                        string[] ages = SelectedFilterValue.Split("-");
+                        if (ages.Length > 1)
+                        {
+                            int.TryParse(ages[0], out int ageBegin);
+                            int.TryParse(ages[1], out int ageEnd);
+                            if (ageEnd > 0)
+                                subList = subList.Where(E => GetAge(E.DateofBorn) >= ageBegin && GetAge(E.DateofBorn) <= ageEnd);
+                        }
+                    }
+                }
+            }
+            
+
+
+
+            
             foreach (Employee employee in subList)
             {
-                ReportModelPayroll reportModelPayroll = new ReportModelPayroll()
+                ReportEmployeeList reportModelPayroll = new ReportEmployeeList()
                 {
                     CompanyCaption = employee.CurrentCompany.Caption,
                     EmployeeFIO = employee.LastName + " " + employee.FirstName + " " + employee.SecondName,
                     DivisionCaption = employee.CurrentDivision.Caption,
-                    Salary = employee.Salary
+                    Experience = GetAge(employee.DateWorkBegin),
+                    Age = GetAge(employee.DateofBorn)
                 };
+
+                ReportEmployeeLists.Add(reportModelPayroll);
             }
+        }
+        /// <summary>
+        /// расчет возраста
+        /// </summary>
+        /// <param name="dateBegin"></param>
+        /// <returns></returns>
+        private int GetAge(DateTime dateBegin) 
+        {
+            DateTime today = DateTime.Today;
+            int age = today.Year - dateBegin.Year;
+            if (today.Month < dateBegin.Month || (today.Month == dateBegin.Month && today.Day < dateBegin.Day))
+                age--;
+            return age;
         }
         #endregion
     }

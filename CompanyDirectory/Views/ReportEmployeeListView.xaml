@@ -39,32 +39,42 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition />
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Компания:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Компания:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <ComboBox Grid.Column="0" Grid.Row="1"  ItemsSource="{Binding CompanyView}" DisplayMemberPath="Caption"
                       SelectedValue="{Binding SelectedCompany}" />
 
 
-            <TextBlock Grid.Column="2" Grid.Row="0" Text="Подразделение:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="Стаж:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Column="2" Grid.Row="1"  ItemsSource="{Binding ExperienceViews}"
+                      SelectedValue="{Binding SelectedExperience}" />
 
-            <ComboBox Grid.Column="2" Grid.Row="1"  ItemsSource="{Binding DivisionsView}" DisplayMemberPath="Caption"
-                      SelectedValue="{Binding SelectedDivision}" />
+            <TextBlock Grid.Column="3" Grid.Row="0" Text="Тип:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+            <ComboBox Grid.Column="4" Grid.Row="0"  ItemsSource="{Binding FilterTypesViews}"
+                      SelectedValue="{Binding SelectedFilterType}" />
+            <TextBlock Grid.Column="3" Grid.Row="1" Text="Значение:" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+            <ComboBox Grid.Column="4" Grid.Row="1"  ItemsSource="{Binding FilterValueViews}"
+                      SelectedValue="{Binding SelectedFilterValue}" />
 
         </Grid>
         <Grid>
             <DataGrid Grid.Column="2" Grid.Row="2" ItemsSource="{Binding ReportEmployeeLists}" DockPanel.Dock="Top">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Имя" Binding="{Binding CompanyCaption}"/>
-                    <DataGridTextColumn Header="Фамилия" Binding="{Binding EmployeeFIO}"/>
-                    <DataGridTextColumn Header="Отчество" Binding="{Binding DivisionCaption}"/>
-                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding Experience}"/>
-                    <DataGridTextColumn Header="Дата приема на работу" Binding="{Binding Age}"/>
+                    <DataGridTextColumn Header="Компания" Binding="{Binding CompanyCaption}"/>
+                    <DataGridTextColumn Header="Сотрудник" Binding="{Binding EmployeeFIO}"/>
+                    <DataGridTextColumn Header="Подразделение" Binding="{Binding DivisionCaption}"/>
+                    <DataGridTextColumn Header="Стаж (в годах)" Binding="{Binding Experience}"/>
+                    <DataGridTextColumn Header="Возраст (в годах)" Binding="{Binding Age}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
