@@ -189,42 +189,5 @@ namespace CompanyDirectory.ViewModels
         }
         #endregion
 
-
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set
-            {
-                if (_isSelected != value)
-                {
-                    _isSelected = value;
-                    OnPropertyChanged("IsSelected");
-                    if (_isSelected)
-                    {
-                        SelectedItem = this;
-                    }
-                }
-            }
-        }
-
-        private static object _selectedItem = null;
-        public static object SelectedItem
-        {
-            get { return _selectedItem; }
-            private set
-            {
-                if (_selectedItem != value)
-                {
-                    _selectedItem = value;
-                    OnSelectedItemChanged();
-                }
-            }
-        }
-
-        static void OnSelectedItemChanged()
-        {
-            // Raise event / do other things
-        }
     }
 }

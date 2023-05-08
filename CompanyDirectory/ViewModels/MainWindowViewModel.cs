@@ -108,9 +108,6 @@ namespace CompanyDirectory.ViewModels
         /// Заголовок
         /// </summary>
         public string Title { get => "Реестр компаний"; }
-        /// <summary>
-        /// Текущая страница
-        /// </summary>
           
     }
 }

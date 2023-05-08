@@ -26,9 +26,9 @@ namespace CompanyDirectory.ViewModels
             get
             {
                 if (CurrentCompany != null && CurrentCompany.Id > 0)
-                    return "Редактирование компнии";
+                    return "Редактирование компании";
                 else
-                    return "Добавление компнии";
+                    return "Добавление компании";
             }
         }
         private IRepository<Division> _repositoryDivision;
@@ -157,7 +157,7 @@ namespace CompanyDirectory.ViewModels
         private void OnChangeDeleteCommandExecuted(Division p)
         {
             var divisionToRemove = p ?? SelectedDivision;
-            if (MessageBox.Show($"Вы хотите удалить подразделение {divisionToRemove.Caption}?", "Удаление работника",
+            if (MessageBox.Show($"Вы хотите удалить подразделение {divisionToRemove.Caption} из списка?", "Удаление подразделения",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 return;
 

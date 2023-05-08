@@ -7,8 +7,8 @@ namespace CompanyDirectory.Services
 {
     public static class ServicesRegistrator
     {
-        public static IServiceCollection AddServices(this IServiceCollection services) => services
+        /*public static IServiceCollection AddServices(this IServiceCollection services) => services
            .AddTransient<SprService>()
-        ;
+        ;*/
     }
 }

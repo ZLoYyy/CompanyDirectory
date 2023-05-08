@@ -35,7 +35,7 @@ namespace CompanyDirectory
 
         internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
             .AddDatabase(host.Configuration.GetSection("DataBase"))
-            .AddServices()
+            //.AddServices()
             .AddViewModels();
 
         protected override async void OnStartup(StartupEventArgs e)

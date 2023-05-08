@@ -101,13 +101,6 @@ namespace CompanyDirectory.ViewModels
             _repositoryCompany = repositoryCompany;
             _repositoryDivision = repositoryDivision;
             _repositoryPosts = repositoryPosts;
-
-            if (_currentEmployee != null)
-            {
-                SelectedCompany = _currentEmployee.CurrentCompany;
-                SelectedDivision = _currentEmployee.CurrentDivision;
-                SelectedPost = _currentEmployee.CurrentPost;
-            }
         }
 
         #region Список компаний
@@ -137,6 +130,7 @@ namespace CompanyDirectory.ViewModels
             }
         }
         #endregion
+        
         #region Список подразделений
         public List<Division> MainDivisionsList { get; set; }
         private CollectionViewSource _divisionViewSource;
@@ -165,6 +159,7 @@ namespace CompanyDirectory.ViewModels
             }
         }
         #endregion
+
         #region Список должностей
         public List<Post> MainPostList { get; set; }
         private CollectionViewSource _postViewSource;
@@ -193,7 +188,6 @@ namespace CompanyDirectory.ViewModels
             }
         }
         #endregion
-
 
         #region Загрузка
 
@@ -229,60 +223,15 @@ namespace CompanyDirectory.ViewModels
 
             foreach (Post post in await _repositoryPosts.Items.ToArrayAsync())
                 MainPostList.Add(post);
+
+            if (_currentEmployee != null)
+            {
+                SelectedCompany = _currentEmployee.CurrentCompany;
+                SelectedDivision = _currentEmployee.CurrentDivision;
+                SelectedPost = _currentEmployee.CurrentPost;
+            }
         }
         #endregion
-
-        #region Выбор компании
-
-        /*private ICommand _selectedCompanyCommand;
-        public ICommand SelectedCompanyCommand => _selectedCompanyCommand
-            ??= new LambdaCommand(OnChangeSelectedCompanyCommandExecuted, CanChangeSelectedCompanyCommandExecute);
-        private bool CanChangeSelectedCompanyCommandExecute(object p) => true;
-
-        private void OnChangeSelectedCompanyCommandExecuted(object p) 
-        {
-            if (CurrentEmployee.CurrentCompany == null)
-                return;
-
-            var filterDivisions = Divisions.Select(D => D.Companies.Where(C => C.Id == CurrentEmployee.CurrentCompany.Id));
-
-            Divisions.Clear();
-            foreach (Division division in filterDivisions)
-                Divisions.Add(division);
-
-        }*/
-        #endregion
-
-        #region Выбор подразделения
-
-        /*private ICommand _selectedDivisionCommand;
-        public ICommand SelectedDivisionCommand => _selectedDivisionCommand
-            ??= new LambdaCommand(OnChangeSelectedDivisionCommandExecuted, CanChangeSelectedDivisionCommandExecute);
-        private bool CanChangeSelectedDivisionCommandExecute(object p) => CurrentEmployee.CurrentCompany != null;
-
-        private void OnChangeSelectedDivisionCommandExecuted(object p)
-        {
-            if (CurrentEmployee.CurrentDivision == null)
-                return;
-
-            var filterPosts = Posts.Select(P => P.Divisions.Select(D=>D.Id == CurrentEmployee.CurrentDivision.Id));
-
-            Posts.Clear();
-            foreach (Post post in filterPosts)
-                Posts.Add(post);
-        }*/
-        #endregion
-
-        #region Выбор должности
-        
-        /*private ICommand _selectedPostCommand;
-        public ICommand SelectedPostCommand => _selectedPostCommand
-            ??= new LambdaCommand(OnChangeSelectedPostCommandExecuted, CanChangeSelectedPostCommandExecute);
-        private bool CanChangeSelectedPostCommandExecute(object p) => CurrentEmployee.CurrentDivision != null;
-
-        private void OnChangeSelectedPostCommandExecuted(object p)
-        {
-        }*/
-        #endregion
+               
     }
 }

@@ -45,7 +45,7 @@ namespace CompanyDirectory.Infrastructure.Commands
                 }
                 if (employee.DateWorkBegin <= DateTime.MinValue)
                 {
-                    MessageBox.Show($"Дата ттрудоустройства не указана", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Дата трудоустройства не указана", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 if (employee.CurrentCompany == null)
@@ -65,7 +65,7 @@ namespace CompanyDirectory.Infrastructure.Commands
                 }
                 if (employee.Salary < 0)
                 {
-                    MessageBox.Show($"Зарплата некоректна", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Зарплата не коректна", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
             }
