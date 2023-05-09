@@ -10,10 +10,10 @@ namespace CompanyDirectory.Server.Repositories
 {
     internal class CompanyRepository : DbRepository<Company>
     {
-        public CompanyRepository(CompanyDirectoryDBContext db) : base(db) { } 
+        public CompanyRepository(CompanyDirectoryDBContext db) : base(db) { }
 
         public override IQueryable<Company> Items => base.Items
-            .Include(item => item.Divisions);
-
+            .Include(item => item.Divisions)
+            .Include(item => item.Employees);
     }
 }

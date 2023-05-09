@@ -1,4 +1,5 @@
 ﻿using CompanyDirectory.Interfaces;
+using CompanyDirectory.Models;
 using CompanyDirectory.Server.Entities;
 using CompanyDirectory.ViewModels.Base;
 using MathCore.WPF.Commands;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,26 +20,50 @@ namespace CompanyDirectory.ViewModels
     internal class MonitorViewModel : BaseViewModel
     {
         IRepository<Company> _companiesRep;
-        IRepository<Division> _divisionsRep;
-        IRepository<Employee> _employeesRep;
-        IRepository<Post> _postsRep;
 
-        public MonitorViewModel(IRepository<Company> companies, 
-            IRepository<Division> divisions, 
-            IRepository<Employee> employees, 
-            IRepository<Post> posts)
+        public MonitorViewModel(IRepository<Company> companies)
         {
             _companiesRep = companies;
-            _divisionsRep = divisions;
-            _employeesRep = employees;
-            _postsRep = posts;
+        }
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                if (!Set(ref _description, value))
+                    return;
+            }
+        }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (!Set(ref _isSelected, value))
+                    return;
+            }
+        }
+
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                if (!Set(ref _isExpanded, value))
+                    return;
+            }
         }
 
         #region Список компаний
         private CollectionViewSource _companyViewSource;
-        private ObservableCollection<Company> _companies;
+        private ObservableCollection<CompanyVievItem> _companies;
         public ICollectionView CompanyView => _companyViewSource?.View;
-        public ObservableCollection<Company> Companies
+        public ObservableCollection<CompanyVievItem> Companies
         {
             get => _companies;
             set
@@ -60,87 +86,7 @@ namespace CompanyDirectory.ViewModels
             }
         }
         #endregion
-        #region Список подразделений
-        private CollectionViewSource _divisionViewSource;
-        private ObservableCollection<Division> _divisions;
-        public ICollectionView DivisionsView => _divisionViewSource?.View;
-        public ObservableCollection<Division> Divisions
-        {
-            get => _divisions;
-            set
-            {
-                if (Set(ref _divisions, value))
-                {
-                    _divisionViewSource = new CollectionViewSource
-                    {
-                        Source = value,
-                        SortDescriptions =
-                        {
-                            new SortDescription(nameof(Division.Caption), ListSortDirection.Ascending)
-                        }
-                    };
-
-                    _divisionViewSource.View.Refresh();
-
-                    OnPropertyChanged(nameof(DivisionsView));
-                }
-            }
-        }
-        #endregion
-        #region Список должностей
-        private CollectionViewSource _postViewSource;
-        private ObservableCollection<Post> _posts;
-        public ICollectionView PostView => _postViewSource?.View;
-        public ObservableCollection<Post> Posts
-        {
-            get => _posts;
-            set
-            {
-                if (Set(ref _posts, value))
-                {
-                    _postViewSource = new CollectionViewSource
-                    {
-                        Source = value,
-                        SortDescriptions =
-                        {
-                            new SortDescription(nameof(Post.Caption), ListSortDirection.Ascending)
-                        }
-                    };
-
-                    _postViewSource.View.Refresh();
-
-                    OnPropertyChanged(nameof(PostView));
-                }
-            }
-        }
-        #endregion
-        #region Список сотрудников
-        private CollectionViewSource _employeeViewSource;
-        private ObservableCollection<Employee> _employees;
-        public ICollectionView EmployeeView => _employeeViewSource?.View;
-        public ObservableCollection<Employee> Employees
-        {
-            get => _employees;
-            set
-            {
-                if (Set(ref _employees, value))
-                {
-                    _employeeViewSource = new CollectionViewSource
-                    {
-                        Source = value,
-                        SortDescriptions =
-                        {
-                            new SortDescription(nameof(Employee.SecondName), ListSortDirection.Ascending)
-                        }
-                    };
-
-                    _employeeViewSource.View.Refresh();
-
-                    OnPropertyChanged(nameof(EmployeeView));
-                }
-            }
-        }
-        #endregion
+        
         #region Загрузка
 
         private ICommand _loadDataCommand;
@@ -157,35 +103,33 @@ namespace CompanyDirectory.ViewModels
         {
             //компании
             if (Companies == null)
-                Companies = new ObservableCollection<Company>();
+                Companies = new ObservableCollection<CompanyVievItem>();
             Companies.Clear();
 
+
             foreach (Company company in await _companiesRep.Items.ToArrayAsync())
-                Companies.Add(company);
+            {
+                CompanyVievItem companyVievItem = new CompanyVievItem()
+                {
+                    Caption = company.Caption
+                };
+                List<DivisionViewItem> Divisions = new List<DivisionViewItem>();
+                foreach (Division division in company.Divisions) 
+                {
+                    DivisionViewItem DivisionViewItem = new DivisionViewItem()
+                    {
+                        Caption = division.Caption,
+                        Employees = company.Employees.Where(E => E.CurrentDivision.Id == division.Id)
+                    };
 
-            //подразделения
-            if (Divisions == null)
-                Divisions = new ObservableCollection<Division>();
-            Divisions.Clear();
+                    Divisions.Add(DivisionViewItem);
+                }
 
-            foreach (Division division in await _divisionsRep.Items.ToArrayAsync())
-                Divisions.Add(division);
+                companyVievItem.Divisions = Divisions;
 
-            //должности
-            if (Posts == null)
-                Posts = new ObservableCollection<Post>();
-            Posts.Clear();
 
-            foreach (Post post in await _postsRep.Items.ToArrayAsync())
-                Posts.Add(post);
-
-            //Сотрудники
-            if (Employees == null)
-                Employees = new ObservableCollection<Employee>();
-            Employees.Clear();
-
-            foreach (Employee employee in await _employeesRep.Items.ToArrayAsync())
-                Employees.Add(employee);
+                Companies.Add(companyVievItem);
+            }
         }
         #endregion
 

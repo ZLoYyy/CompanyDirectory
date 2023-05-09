@@ -14,7 +14,6 @@ namespace CompanyDirectory.Server.Repositories
 
         public override IQueryable<Division> Items => base.Items
             .Include(item => item.Companies)
-            .Include(item => item.Posts)
-            .Include(item => item.Employees);
+            .Include(item => item.Posts);
     }
 }

@@ -33,7 +33,7 @@ namespace CompanyDirectory.ViewModels
 
         private void OnChangeMonitorPageCommandExecuted(object p)
         {
-            CurrenViewtModel = new MonitorViewModel(_companyRep, _divisionRep, _employeesRep, _postsRep);
+            CurrenViewtModel = new MonitorViewModel(_companyRep);
         }     
         
         private ICommand _buttonSprCompanyPageCommand;
@@ -101,7 +101,7 @@ namespace CompanyDirectory.ViewModels
             _postsRep = posts;
             _reportRep = reports;
 
-            CurrenViewtModel = new MonitorViewModel(_companyRep, _divisionRep, _employeesRep, _postsRep);
+            CurrenViewtModel = new MonitorViewModel(_companyRep);
         }
         
         /// <summary>

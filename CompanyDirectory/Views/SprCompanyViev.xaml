@@ -30,7 +30,7 @@
         </Grid>
         <Grid VerticalAlignment="Top">
             <Label Content="Список подразделений" HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Top" VerticalContentAlignment="Center"></Label>
-            <ListView DockPanel.Dock="Top" VerticalAlignment="Top" Height="53" Margin="0,31,0,0" SelectedItem="{Binding SelectedCompany}" ItemsSource="{Binding Divisions}">
+            <ListView DockPanel.Dock="Top" VerticalAlignment="Top" Margin="0,31,0,0" SelectedItem="{Binding SelectedCompany}" ItemsSource="{Binding Divisions}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <WrapPanel>

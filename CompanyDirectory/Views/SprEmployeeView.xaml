@@ -27,6 +27,7 @@
                     <DataGridTextColumn Header="Отчество" Binding="{Binding SecondName}"/>
                     <DataGridTextColumn Header="Дата рождения" Binding="{Binding DateofBorn}"/>
                     <DataGridTextColumn Header="Дата приема на работу" Binding="{Binding DateWorkBegin}"/>
+                    <DataGridTextColumn Header="Компания" Binding="{Binding CurrentCompany.Caption}"/>
                     <DataGridTextColumn Header="Подразделение" Binding="{Binding CurrentDivision.Caption}"/>
                     <DataGridTextColumn Header="Должность" Binding="{Binding CurrentPost.Caption}"/>
                     <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary}"/>

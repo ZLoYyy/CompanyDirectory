@@ -13,6 +13,7 @@ namespace CompanyDirectory.Server.Repositories
         public EmployeeRepository(CompanyDirectoryDBContext db) : base(db) { }
 
         public override IQueryable<Employee> Items => base.Items
+            .Include(item => item.CurrentCompany)
             .Include(item => item.CurrentDivision)
             .Include(item => item.CurrentPost);
     }
