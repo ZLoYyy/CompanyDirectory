@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CompanyDirectory.Models
 {
-    internal class CompanyVievItem
+    internal class CompanyViewItem
     {
         public string Caption { get; set; }
         /// <summary>

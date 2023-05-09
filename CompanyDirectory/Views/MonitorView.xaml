@@ -19,9 +19,15 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         <TreeView Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Stretch" ItemsSource="{Binding Companies}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectDataCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TreeView}}, Path=SelectedItem}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Divisions}" >
                     <Label Content="{Binding Caption}"/>
@@ -52,6 +58,6 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Description}" Margin="10,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Description}" TextWrapping="Wrap" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

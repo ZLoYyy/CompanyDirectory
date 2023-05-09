@@ -20,50 +20,19 @@ namespace CompanyDirectory.ViewModels
     internal class MonitorViewModel : BaseViewModel
     {
         IRepository<Company> _companiesRep;
+        IRepository<Employee> _employeesRep;
 
-        public MonitorViewModel(IRepository<Company> companies)
+        public MonitorViewModel(IRepository<Company> companies, IRepository<Employee> employees)
         {
             _companiesRep = companies;
-        }
-
-        private string _description;
-        public string Description
-        {
-            get => _description;
-            set
-            {
-                if (!Set(ref _description, value))
-                    return;
-            }
-        }
-
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (!Set(ref _isSelected, value))
-                    return;
-            }
-        }
-
-        private bool _isExpanded;
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set
-            {
-                if (!Set(ref _isExpanded, value))
-                    return;
-            }
+            _employeesRep = employees;
         }
 
         #region Список компаний
         private CollectionViewSource _companyViewSource;
-        private ObservableCollection<CompanyVievItem> _companies;
+        private ObservableCollection<CompanyViewItem> _companies;
         public ICollectionView CompanyView => _companyViewSource?.View;
-        public ObservableCollection<CompanyVievItem> Companies
+        public ObservableCollection<CompanyViewItem> Companies
         {
             get => _companies;
             set
@@ -86,15 +55,69 @@ namespace CompanyDirectory.ViewModels
             }
         }
         #endregion
-        
+
+        #region Список сотрудников
+        private ICollection<Employee> _employees;
+        public ICollection<Employee> Employees
+        {
+            get => _employees;
+            set => Set(ref _employees, value);
+        }
+        #endregion
+
+        #region Описание
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                if (!Set(ref _description, value))
+                    return;
+            }
+        }
+
+        private ICommand _selectDataCommand;
+
+        public ICommand SelectDataCommand => _selectDataCommand
+            ??= new LambdaCommand(OnSelectCommandExecuted);
+        private void OnSelectCommandExecuted(object p)
+        {
+            if (p == null)
+                return;
+            string des = string.Empty;
+            if (p is Employee)
+            {
+                Employee employee = p as Employee;
+                des = string.Format("Сотрудник {0} {1} {2}. Дата рождения: {3} Дата трудоустройства: {4} Должность: {5} ",
+                    employee.LastName, employee.FirstName, employee.SecondName, employee.DateofBorn,
+                    employee.DateWorkBegin, employee.CurrentPost?.Caption);
+            }
+            else if (p is CompanyViewItem)
+            {
+                CompanyViewItem companyViewItem = p as CompanyViewItem;
+                des = string.Format("Компания {0}. Дата основания: {1}",
+                    companyViewItem.Caption, companyViewItem.DateCreate);
+            }
+            else if (p is DivisionViewItem)
+            {
+                DivisionViewItem divisionViewItem = p as DivisionViewItem;
+                des = string.Format("Подразделение {0}",
+                    divisionViewItem.Caption);
+            }
+            Description = des;
+        }
+        #endregion
+
         #region Загрузка
 
         private ICommand _loadDataCommand;
 
         public ICommand LoadDataCommand => _loadDataCommand
-            ??= new LambdaCommandAsync(OnLoadEmployeeCommandExecuted);
+            ??= new LambdaCommandAsync(OnLoadDataCommandExecuted);
 
-        private async Task OnLoadEmployeeCommandExecuted()
+        private async Task OnLoadDataCommandExecuted()
         {
             await LoadDataAsync();
         }
@@ -103,15 +126,16 @@ namespace CompanyDirectory.ViewModels
         {
             //компании
             if (Companies == null)
-                Companies = new ObservableCollection<CompanyVievItem>();
+                Companies = new ObservableCollection<CompanyViewItem>();
             Companies.Clear();
 
 
             foreach (Company company in await _companiesRep.Items.ToArrayAsync())
             {
-                CompanyVievItem companyVievItem = new CompanyVievItem()
+                CompanyViewItem companyVievItem = new CompanyViewItem()
                 {
-                    Caption = company.Caption
+                    Caption = company.Caption,
+                    DateCreate = company.DateCreate
                 };
                 List<DivisionViewItem> Divisions = new List<DivisionViewItem>();
                 foreach (Division division in company.Divisions) 
@@ -130,6 +154,12 @@ namespace CompanyDirectory.ViewModels
 
                 Companies.Add(companyVievItem);
             }
+
+            
+            if (Employees == null)
+                Employees = new List<Employee>();
+            Employees.Clear();
+            Employees = await _employeesRep.Items.ToArrayAsync();
         }
         #endregion
 
